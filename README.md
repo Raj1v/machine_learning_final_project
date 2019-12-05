@@ -1,6 +1,7 @@
-# machine_learning_final_project
+# Machine Learning final project
 Recommendation system
-Jasper, Lukas, Rajiv en Hanabi
+
+By Jasper, Lukas, Rajiv en Hanabi
 
 For the project we will write an implementation of a recommendation system.
 
