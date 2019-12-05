@@ -7,11 +7,13 @@ For the project we will write an implementation of a recommendation system.
 
 Which problem do you want to solve?
 - Recommend 
+
 Which paper(s) do you base this on? 
 
 Which algorithms are you going to use?
 - We will use the k-NN classifier and SVD for all unrated movies.
-- Say every there are m users and n rated movies. Every user will have a data set which is an array of 
+- Say every there are m users and n rated movies. Every user will have a data set which is an array of n where some items are not filled in (movies not rated). Therefor we want to use matrix vectorization SVD to minimize our data set. 
+
 Where do you get the data from?
 - We will use the MovieLens 1M dataset from the university of Minnesota. It contains 1 million reviews from 6040 users.
 
