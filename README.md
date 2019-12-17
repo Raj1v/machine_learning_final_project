@@ -8,21 +8,46 @@ For the project we will write an implementation of a recommendation system.
 Which problem do you want to solve?
 - Recommend 
 
-Which paper(s) do you base this on? 
-
 Which algorithms are you going to use?
-- We will use the k-NN classifier and SVD for all unrated movies.
-- Say every there are m users and n rated movies. Every user will have a data set which is an array of n where some items are not filled in (movies not rated). Therefor we want to use matrix vectorization SVD to minimize our data set. 
+- We will use the k-NN classifier.
 
 Where do you get the data from?
 - We will use the MovieLens 1M dataset from the university of Minnesota. It contains 1 million reviews from 6040 users.
 
 Topics to discuss
-- cold data, how to start with a new user, which questions to ask to gather the most information.
-- SVD
 - K-NN classifier
   - which K are we going to use?
-    number of samples (i.e. n_samples), 6040 users and dimensionality (i.e. n_features), 4000 movies.
-    Brute force query time grows as O[DN]
-    Ball tree query time grows as approximately O[DlogN]
-    KD tree query time changes with  in a way that is difficult to precisely characterise. For small  (less than 20 or so) the cost is approximately O[DN], and the KD tree query can be very efficient. For larger , the cost increases to nearly, O[DN], and the overhead due to the tree structure can lead to queries which are slower than brute force.
+  - which distance similarity?
+
+## project outline
+Input data: We will use the MovieLens 1M dataset from the University of Minnesota. It contains 1 million reviews from 6040 users.
+Create the data matrix 
+User ids (6040)  against movies (3952)
+Review from: 1 - 5, No review:  Empty
+Fill in ratings in every cell (1 M), Fill in blank spaces (23 M)
+# Mean center each user’s reviews
+Subtract the mean of the user’s reviews from all its reviews
+Since every user has a different way of rating, some more critical than others, we will normalize the data by using the mean-centered data. 
+After the recommendation gives mean-centered predicted reviews we add the target user’s mean again to resemble the actual predicted review.
+# Recommendation system
+Target user to all other users matrix
+Check which other users have reviewed some movies
+From this point, we only look at those users
+Mean-center normalize per user, incl the target user
+Input (Data_matrix, target_user)
+
+Apply K-NN to target user
+Closer neighbors get higher weights
+Weight = similarity divided by the total similarity of k nearest neighbors
+Output: The predicted reviews of the target user
+
+# Evaluation
+Input 
+Data matrix, without one target review of the target movies
+Target user
+Predicted reviews
+F-measure the results. What is the loss/cost?
+Compare the predicted reviews from the recommendation system to the actual reviews in the data matrix
+False positives more weight than false negatives
+See which similarity measure performs best
+- Cosine, Manhatten, Jaccard, Euclidean
