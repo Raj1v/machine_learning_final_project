@@ -31,6 +31,7 @@ class KNearestNeighbour(object):
     def init_data(self, data):
         #Take the input data matrix and add two new columns at the start, the first with the user id, the second with 
         #this user's mean. Also if we want all our data to be normalized and mean=True, we do that here as well
+        print("test")
         new_data = data.copy()
         all_id_means =[]
         for i in range(len(new_data)):
@@ -112,10 +113,18 @@ class KNearestNeighbour(object):
         #Calculate the predictions for each movie
         predictions = []
         for movie in neighbour_ratings.T:
-            users_rated = np.where(movie !=0)[0]
+            users_rated = np.where(movie != 0)[0]
+            
+            if len(users_rated) == 0:
+                # If neighbouring users did not rate this movie, use average rating
+                predict = 0 # Should be mean of movie
+                predictions.append(predict)
+                continue
+            
             sims_users = self.neighbourhood.T[1][users_rated]
+        
             weighted_scores = movie[users_rated] * sims_users
-            print(sum(weighted_scores),sum(sims_users))
+            
             predict = sum(weighted_scores) / sum(sims_users)
             predictions.append(predict)
           
@@ -133,7 +142,7 @@ class KNearestNeighbour(object):
         self.targetid = targetid - 1
         self.targetmovies = targetmovies
         
-        
+
         self.sim_measure()
         self.get_neighbourhood()
         self.get_recommendations()
