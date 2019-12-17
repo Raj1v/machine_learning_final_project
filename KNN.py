@@ -90,13 +90,15 @@ class KNearestNeighbour(object):
             print("Example of sim_and_id is:",sim_and_id[:5],"\n")
             
         #We define our neighbourhood to be the first k highest sims, with their ID's in the first column                       
-        self.neighbourhood = sim_and_id[np.flip(np.argsort(sim_and_id.T[1, :]))][:self.k]
+        sorted_sims = np.flip(np.argsort(sim_and_id.T[1, :]))
+        self.neighbourhood = sim_and_id[sorted_sims][:self.k]
 
     def get_recommendations(self):
         #Get the users who where in this neighbourhood, make the type int so we can use indexing
         top_k_users = self.neighbourhood.T[0].astype(int)
         
         #Take the movie_ratings our target had, only used if show = True
+        
         target_movie_ratings = self.data[self.targetid][self.targetmovies+1]
         
         #Takes the matrix of neighbour_ratings, for all our k users we get their scores regarding the target_movies
