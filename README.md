@@ -19,17 +19,17 @@ Topics to discuss
   - which K are we going to use?
   - which distance similarity?
 
-## project outline
+# project outline
 Input data: We will use the MovieLens 1M dataset from the University of Minnesota. It contains 1 million reviews from 6040 users.
 Create the data matrix 
 User ids (6040)  against movies (3952)
 Review from: 1 - 5, No review:  Empty
 Fill in ratings in every cell (1 M), Fill in blank spaces (23 M)
-# Mean center each user’s reviews
+### Mean center each user’s reviews
 Subtract the mean of the user’s reviews from all its reviews
 Since every user has a different way of rating, some more critical than others, we will normalize the data by using the mean-centered data. 
 After the recommendation gives mean-centered predicted reviews we add the target user’s mean again to resemble the actual predicted review.
-# Recommendation system
+### Recommendation system
 Target user to all other users matrix
 Check which other users have reviewed some movies
 From this point, we only look at those users
@@ -41,7 +41,7 @@ Closer neighbors get higher weights
 Weight = similarity divided by the total similarity of k nearest neighbors
 Output: The predicted reviews of the target user
 
-# Evaluation
+### Evaluation
 Input 
 Data matrix, without one target review of the target movies
 Target user
