@@ -42,6 +42,7 @@ class KNearestNeighbour(object):
             mean_of_movies.append(movie_mean)
         
         self.mean_of_movies = np.array(mean_of_movies)
+        print(np.all([self.mean_of_movies <= 5]))
         
         #Add the userID and mean for that user to the matrix, if mean = True
         #also subtract that mean from all ratings
@@ -96,7 +97,6 @@ class KNearestNeighbour(object):
             sim_and_id.append([compid[0], sim])
 
         sim_and_id = np.array(sim_and_id)
-        print("sim_and_id",len(sim_and_id),sim_and_id.shape)
         
         if self.show:
             print("Shape of sim_and_id:",sim_and_id.shape,"\n")
@@ -104,14 +104,11 @@ class KNearestNeighbour(object):
         
         #We define our neighbourhood to be the first k highest sims, with their ID's in the first column                       
         neighbourhood = sim_and_id[np.flip(np.argsort(sim_and_id.T[1, :]))][:self.k]
-        print("neighbour",neighbourhood)
         self.neighbourhood = neighbourhood
-        print("neighbourhood",self.neighbourhood.shape)
         
     def get_recommendations(self):
         #Get the users who where in this neighbourhood, make the type int so we can use indexing
         top_k_users = self.neighbourhood.T[0].astype(int) - 1
-        print("top_k_users",top_k_users.shape)
         
         #Take the movie_ratings our target had, only used if show = True
         target_movie_ratings = self.data[self.targetid][self.targetmovies+1]
@@ -142,12 +139,13 @@ class KNearestNeighbour(object):
             sims_users = self.neighbourhood.T[1][users_rated]
             weighted_scores = movie[users_rated] * sims_users
             predict = sum(weighted_scores) / sum(sims_users)
+            print(predict)
+            if self.mean:
+                predict = predict + self.data[self.targetid][1]
             predictions.append(predict)
           
         predictions = np.array(predictions)  
         self.predictions = predictions
-        if self.mean:
-            self.predictions = predictions + self.data[self.targetid][1]
       
         if self.show:
             print("predictions looks like ",predictions)
@@ -164,6 +162,8 @@ class KNearestNeighbour(object):
         self.get_recommendations()
         
         #Return an array of the movies and there respected score
+        if self.show:
+            print(np.array([self.targetmovies,self.predictions]).T)
         return np.array([self.targetmovies,self.predictions]).T
     
           
