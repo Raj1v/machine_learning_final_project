@@ -25,15 +25,26 @@ class KNearestNeighbour(object):
         self.prediction = None
         self.targetmovies = None
         self.mean = mean
+        self.mean_of_movies = None
         self.show = show
         
         
     def init_data(self, data):
         #Take the input data matrix and add two new columns at the start, the first with the user id, the second with 
         #this user's mean. Also if we want all our data to be normalized and mean=True, we do that here as well
-        print("test")
         new_data = data.copy()
         all_id_means =[]
+        transp_data = new_data.T
+        mean_of_movies = []
+        #calculate the mean of all_movies
+        for i in range(len(transp_data)):
+            movie_mean = new_data[i][new_data[i] != 0].mean()
+            mean_of_movies.append(movie_mean)
+        
+        self.mean_of_movies = np.array(mean_of_movies)
+        
+        #Add the userID and mean for that user to the matrix, if mean = True
+        #also subtract that mean from all ratings
         for i in range(len(new_data)):
             id_mean = new_data[i][new_data[i] != 0].mean()
             all_id_means.append([i+1, id_mean])
@@ -85,21 +96,24 @@ class KNearestNeighbour(object):
             sim_and_id.append([compid[0], sim])
 
         sim_and_id = np.array(sim_and_id)
+        print("sim_and_id",len(sim_and_id),sim_and_id.shape)
         
         if self.show:
             print("Shape of sim_and_id:",sim_and_id.shape,"\n")
             print("Example of sim_and_id is:",sim_and_id[:5],"\n")
-            
+        
         #We define our neighbourhood to be the first k highest sims, with their ID's in the first column                       
-        sorted_sims = np.flip(np.argsort(sim_and_id.T[1, :]))
-        self.neighbourhood = sim_and_id[sorted_sims][:self.k]
-
+        neighbourhood = sim_and_id[np.flip(np.argsort(sim_and_id.T[1, :]))][:self.k]
+        print("neighbour",neighbourhood)
+        self.neighbourhood = neighbourhood
+        print("neighbourhood",self.neighbourhood.shape)
+        
     def get_recommendations(self):
         #Get the users who where in this neighbourhood, make the type int so we can use indexing
-        top_k_users = self.neighbourhood.T[0].astype(int)
+        top_k_users = self.neighbourhood.T[0].astype(int) - 1
+        print("top_k_users",top_k_users.shape)
         
         #Take the movie_ratings our target had, only used if show = True
-        
         target_movie_ratings = self.data[self.targetid][self.targetmovies+1]
         
         #Takes the matrix of neighbour_ratings, for all our k users we get their scores regarding the target_movies
@@ -113,18 +127,20 @@ class KNearestNeighbour(object):
         #Calculate the predictions for each movie
         predictions = []
         for movie in neighbour_ratings.T:
-            users_rated = np.where(movie != 0)[0]
+            i = 0
+            target_movie = self.targetmovies[i] -1
+            i += 1
+            
+            users_rated = np.where(movie !=0)[0]
             
             if len(users_rated) == 0:
-                # If neighbouring users did not rate this movie, use average rating
-                predict = 0 # Should be mean of movie
-                predictions.append(predict)
+                #If there are no ratings for this movie we take this movie's mean
+                movie_mean = self.mean_of_movies[target_movie]
+                predictions.append(movie_mean)
                 continue
             
             sims_users = self.neighbourhood.T[1][users_rated]
-        
             weighted_scores = movie[users_rated] * sims_users
-            
             predict = sum(weighted_scores) / sum(sims_users)
             predictions.append(predict)
           
@@ -142,7 +158,7 @@ class KNearestNeighbour(object):
         self.targetid = targetid - 1
         self.targetmovies = targetmovies
         
-
+        
         self.sim_measure()
         self.get_neighbourhood()
         self.get_recommendations()
