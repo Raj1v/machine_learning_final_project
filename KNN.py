@@ -42,7 +42,6 @@ class KNearestNeighbour(object):
             mean_of_movies.append(movie_mean)
         
         self.mean_of_movies = np.array(mean_of_movies)
-        print(np.all([self.mean_of_movies <= 5]))
         
         #Add the userID and mean for that user to the matrix, if mean = True
         #also subtract that mean from all ratings
@@ -139,7 +138,6 @@ class KNearestNeighbour(object):
             sims_users = self.neighbourhood.T[1][users_rated]
             weighted_scores = movie[users_rated] * sims_users
             predict = sum(weighted_scores) / sum(sims_users)
-            print(predict)
             if self.mean:
                 predict = predict + self.data[self.targetid][1]
             predictions.append(predict)
@@ -187,13 +185,13 @@ class KNearestNeighbour(object):
     def pearson_correlation(self, p, q):
     # this code does not scale well to large datasets. In the following, we rely on 
     # scipy.spatial.distance.correlation() to compute long vectors
-        if len(self.p) > 99:
+        if len(p) > 99:
             return 1 - distance.correlation(p,q)        
         
-        p_mean = sum(self.p) / len(p)
+        p_mean = sum(p) / len(p)
         p_deviations = [(pi-p_mean) for pi in p]
         
-        q_mean = sum(self.q) / len(q)
+        q_mean = sum(q) / len(q)
         q_deviations = [(qi-q_mean) for qi in q]
         
         cov = sum(pde * qd for pde,qd in zip(p_deviations, q_deviations))
@@ -231,7 +229,7 @@ class KNearestNeighbour(object):
     
     def sim_measure(self):
         all_measures = {"euclidean" : self.euclidean_similarity,
-                        "manhatten" : self.manhattan_similarity,
+                        "manhattan" : self.manhattan_similarity,
                         "cosine": self.cosine_similarity, 
                         "correlation": self.pearson_correlation,
                         "jaccardset" : self.jaccard_sets,
