@@ -17,7 +17,7 @@ class RecommendMean(object):
         predictions = []   
         
         for movie in targetmovies:
-            prediction = self.mean_of_movies[movie + 1]
+            prediction = self.mean_of_movies[movie - 1]
             predictions.append(prediction)
         
         return np.array([targetmovies, predictions]).T
