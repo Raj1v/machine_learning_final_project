@@ -5,17 +5,6 @@ By Jasper, Lukas, Rajiv en Hanabi
 
 For the project we will write an implementation of a recommendation system. Where the model will be trained to give a predicted review on a movie by a user. To do so the model will analyze the reviews of its nearest neighbours to predict a review. 
 
-Which problem do you want to solve?
-- Create a model that will predict ratings by users by looking at the reviews from its nearest neigbours.
-
-Which algorithms are you going to use?
-- We will use the k-NN classifier.
-  - which K are we going to use?
-  - which distance similarity?
-
-Where do you get the data from?
-- We will use the MovieLens 1M dataset from the university of Minnesota. It contains 1 million reviews from 6040 users.
-
 # project outline
 Input data: We will use the MovieLens 1M dataset from the University of Minnesota. It contains 1 million reviews from 6040 users.
 Create the data matrix 
