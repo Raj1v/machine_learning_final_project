@@ -1,7 +1,6 @@
-# Machine Learning final project
-Recommendation system
+# Recommendation system
 
-By Jasper, Lukas, Rajiv en Hanabi
+Contributors: Jasper, Lukas, Rajiv en Hanabi
 
 For the project we will write an implementation of a recommendation system. Where the model will be trained to give a predicted review on a movie by a user. To do so the model will analyze the reviews of its nearest neighbours to predict a review. 
 
